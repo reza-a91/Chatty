@@ -1,54 +1,87 @@
 import java.util.Collection;
+import java.util.Vector;
 
 /**
  * Created by Reza on 13.05.2015.
  */
-public class ChattyServer implements IChattyServerSubject {
-    ChattyServer()
-    {
+public abstract class ChattyServer implements IChattyServerSubject {
+    public ChattyServer() {
 
     }
 
-    private IChattyServerObserver chattyServerObserver;
-    private IChattyGroup availableGroups;
+    private Collection<IChattyServerObserver> chattyServerObservers = new Vector<IChattyServerObserver>();
+    private Collection<IChattyGroup> availableGroups = new Vector<IChattyGroup>();
 
 
 
+    public boolean createGroup(String GroupID) throws GroupAlreadyExists {
+        boolean created= false;
+
+        if (
+
+                (
+                        (availableGroups.stream()
+                                .filter((available)-> available.getGroupID().equals(available.getGroupID()))
+                                .count()) == 0)) {
+            //availableGroups.add(new );
+            created=true;
 
 
-    public boolean createGroup(String groupID)
-    {
+        } else {
+            throw new GroupAlreadyExists("Group already Exists");
 
-        if ( (availableGroups.getGroupID()!=groupID ) )
+        }
+        return created;
+    }
+
+    public void deleteGroup(IChattyGroup chattyGroup) throws GroupDoesNotExist {
+        if  (availableGroups.stream()
+                .filter((availableGroup)->availableGroup.equals(chattyGroup)).count()!=0)
         {
+
+            chattyServerObservers.forEach(c -> c.revokeGroup(chattyGroup));
+            availableGroups.remove(chattyGroup);
+
+        }else {
+            throw new GroupDoesNotExist(chattyGroup);
+        }
 
         }
 
 
 
 
+    public void registerClient(IChattyServerObserver chattyServerObserver) {
+
+        if (chattyServerObservers.stream()
+                .filter(o -> o.equals(chattyServerObserver))
+                .count() ==0)
+        {
+            chattyServerObservers.add(chattyServerObserver);
+
+        }
+
+        }
+
+
+
+    public void unregisterClient(IChattyServerObserver chattyServerObserver) {
+
+        if (chattyServerObservers.stream()
+                .filter(o -> o.equals(chattyServerObserver))
+                .count() !=0)
+        {
+            chattyServerObservers.remove(chattyServerObserver);
+
+        }
     }
 
-    public void deleteGroup(IChattyGroup chattyGroup)
-    {
-//
-    }
-
-    public void registerClient(IChattyServerObserver chattyServerObserver)
-    {
-
-    }
-
-    public void unregisterClient (IChattyServerObserver chattyServerObserver )
-    {
-
-    }
-
-    public void main (String args[])
-    {
+    public void main(String args[]) {
 
 
     }
-
-
 }
+
+
+
+

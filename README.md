@@ -1,2 +1,2 @@
 # Chatty
-This Repository includes the Java Codes of may socond OOP project, TU Vienna.
+This Repository includes the Java Codes of my socond OOP project, TU Vienna.

@@ -24,6 +24,7 @@ public abstract class ChattyServer implements IChattyServerSubject {
         ChattyGroup g = new ChattyGroup(groupID);
 
             availableGroups.add(g);
+            chattyServerObservers.forEach(c -> c.publishGroup(g));
 
             created=true;
 
@@ -42,6 +43,7 @@ public abstract class ChattyServer implements IChattyServerSubject {
 
             chattyServerObservers.forEach(c -> c.revokeGroup(chattyGroup));
             availableGroups.remove(chattyGroup);
+            chattyServerObservers.forEach(c -> c.revokeGroup(chattyGroup));
 
         }else {
             throw new GroupDoesNotExist(chattyGroup);

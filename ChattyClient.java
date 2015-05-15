@@ -5,36 +5,57 @@ import java.util.Vector;
 /**
  * Created by Reza on 13.05.2015.
  */
-public abstract class ChattyClient implements IChattyGroupObserver, IChattyServerObserver, IGuiClient {
+public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver, IGuiClient {
+
+
+
+
 
     private IChattyServerSubject server;
     private Collection <IChattyGroup> notRegisteredGroups = new Vector<IChattyGroup>();
     private Collection <IChattyGroup> registeredGroups = new Vector<IChattyGroup>();
+    private String name;
+    private IGui myGui;
+
 
 
 
     public ChattyClient (IChattyServerSubject server, String client)
     {
-        this.server =server;
+
+        this.server = server;
+        this.name = client;
+
+        server.registerClient(this);
+
 
     }
-
-    public boolean createGroup(String groupName)
+//IGuiClient Implementation starts Here
+    public String getName()
     {
-       boolean created= false;
+        return name;
+    }
+
+    public void createGroup(String groupName)
+    {
+
+
 
         try
         {
             server.createGroup(groupName);
-            created=true;
+
+
+
         }
         catch (GroupAlreadyExists groupAlreadyExistsException)
         {
             JOptionPane.showMessageDialog(null,"Group already exists!","Exception", JPanel.ERROR );
         }
 
-        return created;
+
     }
+
 
     public void deleteGroup (IChattyGroup group)
     {
@@ -42,7 +63,7 @@ public abstract class ChattyClient implements IChattyGroupObserver, IChattyServe
 
             server.deleteGroup(group);
 
-            }
+        }
         catch (GroupDoesNotExist groupDoesNotExistException)
         {
 
@@ -50,6 +71,8 @@ public abstract class ChattyClient implements IChattyGroupObserver, IChattyServe
 
         }
     }
+
+
 
 
     public Collection<IChattyGroup> getNotRegisteredGroups ()
@@ -67,35 +90,61 @@ public abstract class ChattyClient implements IChattyGroupObserver, IChattyServe
     public void joinGroup(IChattyGroup group)
     {
 
-        server.
-
+        group.joinGroup(this);
+        if  ( !notRegisteredGroups.contains(group))
+        notRegisteredGroups.add(group);
     }
 
     public void leaveGroup (IChattyGroup group)
     {
+        group.leaveGroup(this);
+    }
+
+    public void sendMessage (ChattyMessage message) {
 
     }
 
-    public void publishGroup (IChattyGroup group)
+    public void unregister ()
     {
+        server.unregisterClient(this);
+
+        }
+
+
+     //IGui implementation ends here.
+
+
+    //IchattyServerObserver implementation starts here.
+
+    public void publishGroup (IChattyGroup group) {
+        if (!(registeredGroups.contains(group))) {
+            this.registeredGroups.add(group);
+            this.notRegisteredGroups.remove(group);
+        }
+    }
+
+
+   public void revokeGroup(IChattyGroup group) {
+       if (registeredGroups.contains(group)) {
+           this.registeredGroups.remove(group);
+           this.notRegisteredGroups.add(group);
+       }
+   }
+
+    //chattyServerObserver implementation ends here.*/
+
+
+
+
+ //IchattyGroupObserver implementation starts here.
+
+    public void deliverMessage(ChattyMessage msg) {
+
+        myGui.deliverMessage(msg);
 
     }
 
-    public void revokeGroup(IChattyGroup group)
-    {
-
-    }
-
-    public void sendMessage (ChattyMessage message)
-    {
-
-    }
-
-    public void unregister()
-    {
-
-    }
-
+//IchattyGroupObserver implementation ends here.
 
 
 }

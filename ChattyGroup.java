@@ -1,30 +1,38 @@
+import java.util.Collection;
+import java.util.Vector;
+
 /**
  * Created by Reza on 13.05.2015.
  */
-public abstract class ChattyGroup implements IChattyGroup {
+public class ChattyGroup implements IChattyGroup {
 
     private String group;
+    private Collection<IChattyGroupObserver> observers= new Vector<IChattyGroupObserver>();
 
     public ChattyGroup(String group) {
+
         this.group = group;
     }
 
-    String getGroup() {
+    public String getGroupID() {
         return group;
     }
 
-    void joinGroup(IChattyGroupObserver groupObserver) {
+    public void joinGroup(IChattyGroupObserver groupObserver) {
+
+        observers.add(groupObserver);
 
     }
 
 
-    void leaveGroup(IChattyGroupObserver groupObserver) {
+    public void leaveGroup(IChattyGroupObserver groupObserver) {
 
+        observers.remove(groupObserver);
     }
 
-    void sendMessage (ChattyMessage message)
+    public void sendMessage (ChattyMessage message)
     {
-
+        observers.forEach(observer -> observer.deliverMessage(message)) ;
     }
 
     @Override

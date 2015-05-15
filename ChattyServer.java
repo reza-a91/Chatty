@@ -14,16 +14,17 @@ public abstract class ChattyServer implements IChattyServerSubject {
 
 
 
-    public boolean createGroup(String GroupID) throws GroupAlreadyExists {
+    public boolean createGroup(String groupID) throws GroupAlreadyExists {
         boolean created= false;
 
-        if (
 
-                (
-                        (availableGroups.stream()
+        if (((availableGroups.stream()
                                 .filter((available)-> available.getGroupID().equals(available.getGroupID()))
                                 .count()) == 0)) {
-            //availableGroups.add(new );
+        ChattyGroup g = new ChattyGroup(groupID);
+
+            availableGroups.add(g);
+
             created=true;
 
 

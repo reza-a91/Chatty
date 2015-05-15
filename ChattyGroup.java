@@ -1,7 +1,7 @@
 /**
  * Created by Reza on 13.05.2015.
  */
-public class ChattyGroup {
+public abstract class ChattyGroup implements IChattyGroup {
 
     private String group;
 

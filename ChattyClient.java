@@ -1,18 +1,21 @@
 import javax.swing.*;
 import java.util.Collection;
+import java.util.Vector;
 
 /**
  * Created by Reza on 13.05.2015.
  */
-public abstract class ChattyClient implements IChattyGroupObserver, IChattyServerObserver {
+public abstract class ChattyClient implements IChattyGroupObserver, IChattyServerObserver, IGuiClient {
 
     private IChattyServerSubject server;
-    private IChattyGroup notRegisteredGroups;
+    private Collection <IChattyGroup> notRegisteredGroups = new Vector<IChattyGroup>();
+    private Collection <IChattyGroup> registeredGroups = new Vector<IChattyGroup>();
 
 
 
-    public ChattyClient (IChattyServerSubject serve, String client)
+    public ChattyClient (IChattyServerSubject server, String client)
     {
+        this.server =server;
 
     }
 
@@ -49,17 +52,26 @@ public abstract class ChattyClient implements IChattyGroupObserver, IChattyServe
     }
 
 
-    Collection<IChattyGroup> getNotRegisteredGroups ()
+    public Collection<IChattyGroup> getNotRegisteredGroups ()
     {
-        return null;
+        return notRegisteredGroups;
+
     }
+
+    public Collection<IChattyGroup> getRegisteredGroups ()
+    {
+        return registeredGroups;
+    }
+
 
     public void joinGroup(IChattyGroup group)
     {
 
+        server.
+
     }
 
-    void leaveGroup (IChattyGroup group)
+    public void leaveGroup (IChattyGroup group)
     {
 
     }

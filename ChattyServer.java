@@ -4,7 +4,7 @@ import java.util.Vector;
 /**
  * Created by Reza on 13.05.2015.
  */
-public abstract class ChattyServer implements IChattyServerSubject {
+public class ChattyServer implements IChattyServerSubject {
     public ChattyServer() {
 
     }
@@ -13,7 +13,7 @@ public abstract class ChattyServer implements IChattyServerSubject {
     private Collection<IChattyGroup> availableGroups = new Vector<IChattyGroup>();
 
 
-
+    @Override
     public boolean createGroup(String groupID) throws GroupAlreadyExists {
         boolean created= false;
 
@@ -36,6 +36,7 @@ public abstract class ChattyServer implements IChattyServerSubject {
         return created;
     }
 
+    @Override
     public void deleteGroup(IChattyGroup chattyGroup) throws GroupDoesNotExist {
         if  (availableGroups.stream()
                 .filter((availableGroup)->availableGroup.equals(chattyGroup)).count()!=0)
@@ -53,7 +54,7 @@ public abstract class ChattyServer implements IChattyServerSubject {
 
 
 
-
+    @Override
     public void registerClient(IChattyServerObserver chattyServerObserver) {
 
         if (chattyServerObservers.stream()
@@ -67,7 +68,7 @@ public abstract class ChattyServer implements IChattyServerSubject {
         }
 
 
-
+    @Override
     public void unregisterClient(IChattyServerObserver chattyServerObserver) {
 
         if (chattyServerObservers.stream()
@@ -78,6 +79,7 @@ public abstract class ChattyServer implements IChattyServerSubject {
 
         }
     }
+
 
     public void main(String args[]) {
 

@@ -1,3 +1,4 @@
+import java.io.Console;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -82,10 +83,43 @@ public class ChattyServer implements IChattyServerSubject {
 
 
     public void main(String args[]) {
+        ChattyServer server= new ChattyServer();
+        Pva myPVA= new Pva(server);
+
+        //Chatty Command Line will be implemented here.
+        Console chattyConsole = System.console();
+        String newLine = System.getProperty("line.separator");
+        Collection<ChattyClient> clients= new Vector<ChattyClient>();
+
+        while (true) {
+            chattyConsole.printf(newLine + ">");
+            switch (chattyConsole.readLine()) {
+                case "clear":
+                    chattyConsole.flush();
+                    break;
+                case "dir":
+                    chattyConsole.printf("Clear Console:                     clear" + newLine);
+                    chattyConsole.printf("Get a list of available commands:  dir" + newLine);
+                    chattyConsole.printf("Add Client:                        new");
+                    break;
+                case "new":
+                    String clientName = chattyConsole.readLine();
+                    clients.add(new ChattyClient(server, clientName));
+                    break;
+            }
+
+
+            }
+
+
+        }
+
+
+
 
 
     }
-}
+
 
 
 

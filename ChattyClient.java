@@ -31,11 +31,14 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
     }
 //IGuiClient Implementation starts Here
+
+
     public String getName()
     {
         return name;
     }
 
+    @Override
     public void createGroup(String groupName)
     {
 
@@ -45,9 +48,8 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         {
             server.createGroup(groupName);
 
-
-
         }
+
         catch (GroupAlreadyExists groupAlreadyExistsException)
         {
             JOptionPane.showMessageDialog(null,"Group already exists!","Exception", JPanel.ERROR );
@@ -56,7 +58,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
     }
 
-
+    @Override
     public void deleteGroup (IChattyGroup group)
     {
         try {
@@ -74,36 +76,45 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
 
 
-
+    @Override
     public Collection<IChattyGroup> getNotRegisteredGroups ()
     {
         return notRegisteredGroups;
 
     }
 
+    @Override
     public Collection<IChattyGroup> getRegisteredGroups ()
     {
         return registeredGroups;
     }
 
 
+    @Override
     public void joinGroup(IChattyGroup group)
     {
 
         group.joinGroup(this);
-        if  ( !notRegisteredGroups.contains(group))
-        notRegisteredGroups.add(group);
+        registeredGroups.add(group);
+        notRegisteredGroups.remove(group);
+        myGui.updateGUI();
     }
 
+    @Override
     public void leaveGroup (IChattyGroup group)
     {
         group.leaveGroup(this);
+        registeredGroups.remove(group);
+        notRegisteredGroups.remove(group);
+        myGui.updateGUI();
     }
 
+    @Override
     public void sendMessage (ChattyMessage message) {
 
     }
 
+    @Override
     public void unregister ()
     {
         server.unregisterClient(this);
@@ -116,19 +127,20 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
     //IchattyServerObserver implementation starts here.
 
+    @Override
     public void publishGroup (IChattyGroup group) {
-        if (!(registeredGroups.contains(group))) {
-            this.registeredGroups.add(group);
-            this.notRegisteredGroups.remove(group);
+            this.notRegisteredGroups.add(group);
+            myGui.updateGUI();
         }
-    }
 
 
-   public void revokeGroup(IChattyGroup group) {
-       if (registeredGroups.contains(group)) {
-           this.registeredGroups.remove(group);
-           this.notRegisteredGroups.add(group);
-       }
+
+   @Override
+    public void revokeGroup(IChattyGroup group) {
+
+           this.notRegisteredGroups.remove(group);
+           myGui.updateGUI();
+
    }
 
     //chattyServerObserver implementation ends here.*/
@@ -138,6 +150,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
  //IchattyGroupObserver implementation starts here.
 
+    @Override
     public void deliverMessage(ChattyMessage msg) {
 
         myGui.deliverMessage(msg);

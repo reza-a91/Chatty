@@ -19,24 +19,21 @@ public class ChattyServer implements IChattyServerSubject {
 
     @Override
     public boolean createGroup(String groupID) throws GroupAlreadyExists {
-        boolean created= false;
-
-
 
         ChattyGroup g = new ChattyGroup(groupID);
 
-            if (!(availableGroups.contains(g))) {
-                availableGroups.add(g);
-                chattyServerObservers.forEach(c -> c.publishGroup(g));
-                created=true;
-            }else{
-                throw new GroupAlreadyExists("Group already exists!");
-            }
+         if (availableGroups.stream()
+        .filter(a->a.getGroupID().equals(groupID)).count()!= 0)
 
-            System.console().printf("Ding!");
+            throw (new GroupAlreadyExists("Group Already Exists!"));
 
+         else
+         {
+             availableGroups.add(g);
+             chattyServerObservers.forEach(c -> c.publishGroup(g));
+         }
 
-        return created;
+        return true;
         }
 
 
@@ -44,19 +41,20 @@ public class ChattyServer implements IChattyServerSubject {
 
     @Override
     public void deleteGroup(IChattyGroup chattyGroup) throws GroupDoesNotExist {
-        if  (availableGroups.stream()
-                .filter((availableGroup)->availableGroup.equals(chattyGroup)).count()!=0)
-        {
 
-            chattyServerObservers.forEach(c -> c.revokeGroup(chattyGroup));
+        if (!(availableGroups.stream().map(a ->a.getGroupID())
+                              .equals(chattyGroup.getGroupID())))
+
+            throw (new GroupDoesNotExist(chattyGroup));
+
+        else
+        {
             availableGroups.remove(chattyGroup);
             chattyServerObservers.forEach(c -> c.revokeGroup(chattyGroup));
-
-        }else {
-            throw new GroupDoesNotExist(chattyGroup);
         }
 
-        }
+
+    }
 
 
 
@@ -96,7 +94,7 @@ public class ChattyServer implements IChattyServerSubject {
         Console chattyConsole = System.console();
 
         String newLine = System.getProperty("line.separator");
-        new ChattyClient(server, "Test");
+
         Process process;
         String input;
 
@@ -121,15 +119,16 @@ public class ChattyServer implements IChattyServerSubject {
                     chattyConsole.printf("Credits:                           credits");
                     break;
 
-                case "creadits":
-                    chattyConsole.printf("Chatty v1.0; Student Version, Copleted by Reza Aghideh, Vienna University of Technology");
-                    new ChattyClient(server, input);
+                case "credits":
+                    chattyConsole.printf("Chatty v1.0; Student Version, Completed by Reza Aghideh, Vienna University of Technology.");
+                    chattyConsole.printf(newLine);
                     break;
 
 
                 case "new":
-                    input = chattyConsole.readLine("Enter Client Name");
+                    input = chattyConsole.readLine("Enter Client Name: ");
                     new ChattyClient(server, input);
+
                     break;
 
 

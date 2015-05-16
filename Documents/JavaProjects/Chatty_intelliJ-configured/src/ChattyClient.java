@@ -56,13 +56,12 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         try
         {
             server.createGroup(groupName);
-            System.console().printf("Ding!");
 
         }
 
         catch (GroupAlreadyExists groupAlreadyExistsException)
         {
-            JOptionPane.showMessageDialog(null,"Group already exists!","Exception", JPanel.ERROR );
+            JOptionPane.showMessageDialog(null, "Group IDs are identical!");
         }
     myGui.updateGUI();
 
@@ -79,7 +78,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         catch (GroupDoesNotExist groupDoesNotExistException)
         {
 
-            JOptionPane.showMessageDialog(null,"Requested Group does not exist!","Exception", JPanel.ERROR );
+            JOptionPane.showMessageDialog(null,"Requested Group does not exist!");
 
         }
     }

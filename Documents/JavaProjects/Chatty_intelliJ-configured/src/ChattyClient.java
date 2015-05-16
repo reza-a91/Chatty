@@ -75,8 +75,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         try {
 
              while(registeredGroups.iterator().hasNext() )
-                registeredGroups.iterator().next()
-                                 .sendMessage(new ChattyMessage(registeredGroups.iterator().next(),this.name,
+                this.sendMessage(new ChattyMessage(registeredGroups.iterator().next(),this.name,
                                                 "This Group will be deleted. Please unregister yourself." ));
             server.deleteGroup(group);
 

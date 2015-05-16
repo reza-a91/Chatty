@@ -44,11 +44,10 @@ public class ChattyServer implements IChattyServerSubject {
 
 
 
-        if (!(availableGroups.stream().map(a ->a.getGroupID())
-                              .equals(chattyGroup.getGroupID()))
-                 )
 
-            throw (new GroupDoesNotExist(chattyGroup));
+        if ((availableGroups.stream().filter(a->a.getGroupID().equals(chattyGroup.getGroupID())).count())!=1)
+
+           throw (new GroupDoesNotExist(chattyGroup));
 
         else
         {

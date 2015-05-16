@@ -16,7 +16,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
     private Collection <IChattyGroup> registeredGroups = new Vector<IChattyGroup>();
     private String name;
     private IGui myGui;
-
+    private String newLine = System.getProperty("line.separator");
 
 
 
@@ -74,16 +74,23 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
         try {
 
-             while(registeredGroups.iterator().hasNext() )
-                this.sendMessage(new ChattyMessage(registeredGroups.iterator().next(),this.name,
-                                                "This Group will be deleted. Please unregister yourself." ));
+
+            notRegisteredGroups.stream()
+                    .filter(n -> n.getGroupID().equals(group.getGroupID()))
+                    .forEach(n->n.sendMessage(new
+                            ChattyMessage(group, this.name, newLine+
+                            "This Group will be deleted. Please unregister it from your local session.")));
+
+
             server.deleteGroup(group);
 
-        }
-        catch (GroupDoesNotExist groupDoesNotExistException)
-        {
+        }catch (GroupDoesNotExist groupDoesNotExistException){
+
 
             JOptionPane.showMessageDialog(null,"Requested Group does not exist!");
+            notRegisteredGroups.remove(group);
+            myGui.updateGUI();
+
 
         }
     }
@@ -111,14 +118,20 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         group.joinGroup(this);
         registeredGroups.add(group);
         notRegisteredGroups.remove(group);
+        sendMessage(new ChattyMessage(group,this.name,newLine +
+               this.name + "Joined the group." + newLine));
         myGui.updateGUI();
     }
 
     @Override
     public void leaveGroup (IChattyGroup group)
     {
+        sendMessage(new ChattyMessage(group,this.name,newLine +
+                this.name + "left the group." + newLine));
+
         group.leaveGroup(this);
         registeredGroups.remove(group);
+
         notRegisteredGroups.add(group);
         myGui.updateGUI();
     }

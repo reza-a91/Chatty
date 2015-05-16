@@ -42,8 +42,11 @@ public class ChattyServer implements IChattyServerSubject {
     @Override
     public void deleteGroup(IChattyGroup chattyGroup) throws GroupDoesNotExist {
 
+
+
         if (!(availableGroups.stream().map(a ->a.getGroupID())
-                              .equals(chattyGroup.getGroupID())))
+                              .equals(chattyGroup.getGroupID()))
+                 )
 
             throw (new GroupDoesNotExist(chattyGroup));
 

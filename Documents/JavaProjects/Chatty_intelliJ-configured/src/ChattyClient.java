@@ -70,8 +70,14 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
     @Override
     public void deleteGroup (IChattyGroup group)
     {
+
+
         try {
 
+             while(registeredGroups.iterator().hasNext() )
+                registeredGroups.iterator().next()
+                                 .sendMessage(new ChattyMessage(registeredGroups.iterator().next(),this.name,
+                                                "This Group will be deleted. Please unregister yourself." ));
             server.deleteGroup(group);
 
         }
@@ -118,10 +124,6 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         myGui.updateGUI();
     }
 
-    @Override
-    public void sendMessage (ChattyMessage message) {
-
-    }
 
     @Override
     public void unregister ()
@@ -138,9 +140,10 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
     @Override
     public void publishGroup (IChattyGroup group) {
-            this.notRegisteredGroups.add(group);
-            myGui.updateGUI();
-            System.out.println("in publishgroup/ChattyClient" + this.notRegisteredGroups.size());
+
+        this.notRegisteredGroups.add(group);
+        myGui.updateGUI();
+
         }
 
 
@@ -159,6 +162,14 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
 
  //IchattyGroupObserver implementation starts here.
+
+    @Override
+    public void sendMessage(ChattyMessage message)
+    {
+        registeredGroups.stream()
+                        .filter(r->r.getGroupID().equals(message.getGroup().getGroupID()))
+                        .forEach(r -> r.sendMessage(message));
+    }
 
     @Override
     public void deliverMessage(ChattyMessage msg) {

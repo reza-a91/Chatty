@@ -18,7 +18,7 @@ public class ChattyMessage {
 	}
 
 	public String getMessage() {
-		return message;
+		return (message);
 	}
 
 	@Override

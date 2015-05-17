@@ -91,6 +91,14 @@ public class ChattyServer implements IChattyServerSubject {
 
         ChattyServer server= new ChattyServer();
         Pva myPVA= new Pva(server);
+        String currentDir = System.getProperty("user.dir");
+        try {
+            Runtime.getRuntime().exec("c/cmd/cd "+currentDir);
+
+        }catch(Exception exception) {
+            //
+
+        }
 
         //Chatty Command Line will be implemented here.
         Console chattyConsole = System.console();

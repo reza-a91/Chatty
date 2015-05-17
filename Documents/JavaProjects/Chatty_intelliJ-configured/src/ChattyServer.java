@@ -40,12 +40,12 @@ public class ChattyServer implements IChattyServerSubject {
              }
 
              else{
-             System.out.println(newLine + "Server| " + groupsHistory.size()+" Element in Group History.");
+             System.out.println(newLine + "Server| " + groupsHistory.size()+" Element(s) in Group History.");
                  g=groupsHistory.stream()
                          .filter(gR->gR.getGroupID().equals(groupID))
                          .iterator().next();
                  availableGroups.add(g);
-             System.out.println(newLine+ "Server| Group " + g.getGroupID()+" restored by Server!");}
+             System.out.println(newLine+ "Server| Group " + g.getGroupID()+" was restored.");}
 
              chattyServerObservers.forEach(c -> c.publishGroup(g));
          }

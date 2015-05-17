@@ -162,7 +162,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
         {
 
-            System.out.println("Client " + this.name +" Has has been informed of the new group.");
+            System.out.println("Client " + this.name +" has been informed of the new group.");
             this.notRegisteredGroups.add(group);
 
 

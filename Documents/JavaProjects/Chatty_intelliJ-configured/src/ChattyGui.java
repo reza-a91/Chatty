@@ -177,7 +177,7 @@ public class ChattyGui implements IGui {
 	class exitWindow extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
 			guiClient.unregister();
-			System.out.println("Client deaktiviert: " + name);
+			System.out.println("Client "+ name + " deactivated: ");
 		}
 	}
 

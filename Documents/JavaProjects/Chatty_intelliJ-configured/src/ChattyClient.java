@@ -78,7 +78,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
             notRegisteredGroups.stream()
                     .filter(n -> n.getGroupID().equals(group.getGroupID()))
                     .forEach(n->n.sendMessage(new
-                            ChattyMessage(group, this.name, newLine+
+                            ChattyMessage(group, this.name,newLine +
                             "This Group will be deleted. Please unregister it from your local session.")));
 
 
@@ -118,16 +118,16 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         group.joinGroup(this);
         registeredGroups.add(group);
         notRegisteredGroups.remove(group);
-        sendMessage(new ChattyMessage(group,this.name,newLine +
-               this.name + "Joined the group." + newLine));
+        sendMessage(new ChattyMessage(group,this.name, newLine +
+               this.name + " joined the group." + newLine));
         myGui.updateGUI();
     }
 
     @Override
     public void leaveGroup (IChattyGroup group)
     {
-        sendMessage(new ChattyMessage(group,this.name,newLine +
-                this.name + "left the group." + newLine));
+        sendMessage(new ChattyMessage(group,this.name, newLine +
+                this.name + " left the group." + newLine));
 
         group.leaveGroup(this);
         registeredGroups.remove(group);

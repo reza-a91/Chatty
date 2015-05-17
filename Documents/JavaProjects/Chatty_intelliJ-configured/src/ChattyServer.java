@@ -99,44 +99,38 @@ public class ChattyServer implements IChattyServerSubject {
 
         Process process;
         String input;
+        chattyConsole.printf(newLine + "***Chatty Student Control Panel.***" + newLine +
+                                        newLine + "enter help for available commands:");
 
         while (true) {
             chattyConsole.printf(newLine + ">");
             switch (input= chattyConsole.readLine("")) {
 
-                case "clear":
-                    try {
-                       process=  Runtime.getRuntime().exec("cls");
-                    }catch(Exception exec) {
-                    JOptionPane.showMessageDialog(null, "No Console Objects in the Runtime!");
-                }
-
-                   break;
 
                 case "help":
-                    chattyConsole.printf("Add Client:                        new" + newLine);
-                    chattyConsole.printf("Clear Console:                     clear" + newLine);
+                    chattyConsole.printf(newLine  +
+                                         "Add new Client:                    new client" + newLine);
                     chattyConsole.printf("Get a list of available commands:  help" + newLine);
+                    chattyConsole.printf("Credits:                           credits" +newLine);
                     chattyConsole.printf("Exit Program:                      exit" + newLine);
-                    chattyConsole.printf("Credits:                           credits");
+
                     break;
 
                 case "credits":
-                    chattyConsole.printf("Chatty v1.0; Student Version, Completed by Reza Aghideh, Vienna University of Technology.");
+                    chattyConsole.printf("Chatty v1.0; Student Version," + newLine+
+                            "Completed by Reza Aghideh, Vienna University of Technology.");
                     chattyConsole.printf(newLine);
                     break;
 
 
-                case "new":
+                case "new client":
                     input = chattyConsole.readLine("Enter Client Name: ");
                     new ChattyClient(server, input);
 
                     break;
 
 
-
-
-                case "end":
+                case "exit":
                     System.exit(0);
                     break;
             }

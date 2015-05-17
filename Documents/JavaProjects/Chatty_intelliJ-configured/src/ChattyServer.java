@@ -15,21 +15,38 @@ public class ChattyServer implements IChattyServerSubject {
 
     private Collection<IChattyServerObserver> chattyServerObservers = new Vector<IChattyServerObserver>();
     private Collection<IChattyGroup> availableGroups = new Vector<IChattyGroup>();
-
+    private Collection<ChattyGroup> groupsHistory = new Vector<ChattyGroup>();
+    private String newLine = System.getProperty("line.separator");
 
     @Override
     public boolean createGroup(String groupID) throws GroupAlreadyExists {
 
-        ChattyGroup g = new ChattyGroup(groupID);
+        ChattyGroup g;
 
-         if (availableGroups.stream()
-        .filter(a->a.getGroupID().equals(groupID)).count()!= 0)
 
-            throw (new GroupAlreadyExists("Group Already Exists!"));
+            if(this.availableGroups.stream()
+                    .filter(r -> r.getGroupID().equals(groupID)).count()!=0)
+             throw (new GroupAlreadyExists("Group Already Exists!"));
 
          else
          {
-             availableGroups.add(g);
+             if (groupsHistory.stream()
+                     .filter(a->a.getGroupID().equals(groupID)).count()== 0){
+
+                 g= new ChattyGroup(groupID);
+                 groupsHistory.add(g);
+                 availableGroups.add(g);
+
+             }
+
+             else{
+             System.out.println(newLine + "Server| " + groupsHistory.size()+" Element in Group History.");
+                 g=groupsHistory.stream()
+                         .filter(gR->gR.getGroupID().equals(groupID))
+                         .iterator().next();
+                 availableGroups.add(g);
+             System.out.println(newLine+ "Server| Group " + g.getGroupID()+" restored by Server!");}
+
              chattyServerObservers.forEach(c -> c.publishGroup(g));
          }
 
@@ -52,6 +69,7 @@ public class ChattyServer implements IChattyServerSubject {
         else
         {
             availableGroups.remove(chattyGroup);
+
             chattyServerObservers.forEach(c -> c.revokeGroup(chattyGroup));
         }
 
@@ -91,21 +109,13 @@ public class ChattyServer implements IChattyServerSubject {
 
         ChattyServer server= new ChattyServer();
         Pva myPVA= new Pva(server);
-        String currentDir = System.getProperty("user.dir");
-        try {
-            Runtime.getRuntime().exec("c/cmd/cd "+currentDir);
-
-        }catch(Exception exception) {
-            //
-
-        }
 
         //Chatty Command Line will be implemented here.
         Console chattyConsole = System.console();
 
         String newLine = System.getProperty("line.separator");
 
-        Process process;
+
         String input;
         chattyConsole.printf(newLine + "***Chatty Student Control Panel.***" + newLine +
                                         newLine + "enter help for available commands:");

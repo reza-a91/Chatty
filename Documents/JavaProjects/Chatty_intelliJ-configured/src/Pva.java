@@ -8,6 +8,7 @@
 public class Pva implements IChattyGroupObserver, IChattyServerObserver {
 
     Console chattyConsole=System.console();
+    private String newLine = System.getProperty("line.separator");
 
 
     public Pva(ChattyServer server)
@@ -25,13 +26,13 @@ public class Pva implements IChattyGroupObserver, IChattyServerObserver {
     @Override
     public void publishGroup(IChattyGroup group)
     {
-        System.out.println("PVA| " + "New Group available: " + group.getGroupID());
+        System.out.println(newLine + "PVA| " + "New Group available: " + group.getGroupID());
     }
 
     @Override
     public void revokeGroup(IChattyGroup group)
     {
-        System.out.println("PVA| " + "Group deleted: " + group.getGroupID());
+        System.out.println(newLine+ "PVA| " + "Group deleted: " + group.getGroupID());
     }
 
 }

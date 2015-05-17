@@ -20,6 +20,8 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
 
 
+
+
     public ChattyClient (IChattyServerSubject server, String client)
     {
 
@@ -61,7 +63,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
         catch (GroupAlreadyExists groupAlreadyExistsException)
         {
-            JOptionPane.showMessageDialog(null, "Group IDs are identical!");
+            JOptionPane.showMessageDialog(null, "Group ID already in use!");
         }
     myGui.updateGUI();
 
@@ -75,11 +77,6 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         try {
 
 
-            notRegisteredGroups.stream()
-                    .filter(n -> n.getGroupID().equals(group.getGroupID()))
-                    .forEach(n->n.sendMessage(new
-                            ChattyMessage(group, this.name,newLine +
-                            "This Group will be deleted. Please unregister it from your local session.")));
 
 
             server.deleteGroup(group);
@@ -88,7 +85,7 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
 
 
             JOptionPane.showMessageDialog(null,"Requested Group does not exist!");
-            notRegisteredGroups.remove(group);
+
             myGui.updateGUI();
 
 
@@ -132,7 +129,11 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
         group.leaveGroup(this);
         registeredGroups.remove(group);
 
-        notRegisteredGroups.add(group);
+        if (notRegisteredGroups.stream()
+            .filter(a -> a.getGroupID().equals(group.getGroupID())).count()== 0)
+            notRegisteredGroups.add(group);
+
+
         myGui.updateGUI();
     }
 
@@ -153,19 +154,53 @@ public class ChattyClient implements IChattyServerObserver, IChattyGroupObserver
     @Override
     public void publishGroup (IChattyGroup group) {
 
-        this.notRegisteredGroups.add(group);
-        myGui.updateGUI();
+        if((this.notRegisteredGroups.stream()
+                .filter(r->r.getGroupID().equals(group.getGroupID())).count()==0)
+
+               &&  (this.registeredGroups.stream()
+                .filter(r->r.getGroupID().equals(group.getGroupID())).count()==0))
+
+        {
+
+            System.out.println("Client " + this.name +" Has has been informed of the new group.");
+            this.notRegisteredGroups.add(group);
+
 
         }
+        myGui.updateGUI();
+
+    }
 
 
 
    @Override
     public void revokeGroup(IChattyGroup group) {
 
-           this.notRegisteredGroups.remove(group);
-           myGui.updateGUI();
 
+
+       if (registeredGroups.stream()
+               .filter(a->a.getGroupID().equals(group.getGroupID())).count() != 0) {
+
+           this.deliverMessage(new ChattyMessage(group, this.name," DELETION INQUIRY!"));
+
+           try {
+
+           System.out.println("restoration request by one or more clients.");
+               server.createGroup(group.getGroupID());
+           }
+       catch (GroupAlreadyExists groupAlreadyExists)
+           {
+
+           }
+       }
+       else
+       {
+           this.notRegisteredGroups.remove(group);
+           System.out.println("Client " + this.name + " attempted to delete the group " +group.getGroupID() +".");
+       }
+
+
+       myGui.updateGUI();
    }
 
     //chattyServerObserver implementation ends here.*/
